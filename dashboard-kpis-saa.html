@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPIs — Subsecretaria de Assuntos Administrativos | MS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #111827;
+    --surface2: #1a2234;
+    --border: #1e2d45;
+    --accent: #00d4aa;
+    --accent2: #3b82f6;
+    --accent3: #f59e0b;
+    --accent4: #ef4444;
+    --accent5: #8b5cf6;
+    --text: #e8edf5;
+    --text2: #8899aa;
+    --text3: #4a5f75;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 36px 0 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {}
+
+  .ministry-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ministry-tag::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .week-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 4px;
+  }
+
+  .week-badge span {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .last-update {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Área tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab:hover { border-color: var(--accent); color: var(--text); }
+
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    font-weight: 500;
+  }
+
+  .tab-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* Summary row */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .summary-card:hover { border-color: var(--accent); }
+
+  .summary-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--card-color, var(--accent));
+    border-radius: 8px 0 0 8px;
+  }
+
+  .summary-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .summary-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .summary-sub {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+
+  /* KPI Section */
+  .section {
+    display: none;
+  }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .section-desc {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  /* KPI Cards grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .kpi-card:hover {
+    border-color: rgba(0,212,170,0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .kpi-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    max-width: 75%;
+  }
+
+  .status-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 4px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .status-ok { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+  .status-alerta { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.2); }
+  .status-critico { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+  .status-nd { background: rgba(136,153,170,0.1); color: var(--text2); border: 1px solid rgba(136,153,170,0.15); }
+
+  .kpi-value-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .kpi-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .kpi-unit {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .kpi-target {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  .kpi-target strong {
+    color: var(--text2);
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .bar-green { background: var(--green); }
+  .bar-yellow { background: var(--yellow); }
+  .bar-red { background: var(--red); }
+  .bar-blue { background: var(--blue); }
+
+  .kpi-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .kpi-source {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .kpi-trend {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .trend-up { color: var(--green); }
+  .trend-down { color: var(--red); }
+  .trend-neutral { color: var(--text3); }
+
+  /* Sparkline mini */
+  .sparkline {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 28px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  .spark-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    min-height: 3px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .spark-bar:last-child { opacity: 1; }
+
+  /* Legenda */
+  .legend-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+  }
+
+  /* Nota metodológica */
+  .nota {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  .nota strong {
+    color: var(--accent2);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-text span { color: var(--accent); }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .kpi-card {
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  .kpi-card:nth-child(2) { animation-delay: 0.05s; }
+  .kpi-card:nth-child(3) { animation-delay: 0.1s; }
+  .kpi-card:nth-child(4) { animation-delay: 0.15s; }
+  .kpi-card:nth-child(5) { animation-delay: 0.2s; }
+  .kpi-card:nth-child(6) { animation-delay: 0.25s; }
+
+  /* All sections view */
+  #all-section .kpi-area-block {
+    margin-bottom: 36px;
+  }
+
+  .area-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .area-divider-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  .area-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Editable values */
+  .kpi-value[contenteditable="true"] {
+    outline: none;
+    border-bottom: 1px dashed var(--accent);
+    cursor: text;
+  }
+  .kpi-value[contenteditable="true"]:focus {
+    color: var(--accent);
+  }
+
+  .edit-hint {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .edit-hint::before {
+    content: '✎';
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <div class="ministry-tag">Ministério da Saúde · SAA/MS</div>
+      <h1>Painel de <em>KPIs</em><br>Subsecretaria de Assuntos Administrativos</h1>
+    </div>
+    <div class="header-right">
+      <div class="week-badge">Semana <span id="week-num">—</span> · <span id="week-range">—</span></div>
+      <div class="last-update" id="last-update">—</div>
+    </div>
+  </header>
+
+  <!-- Summary -->
+  <div class="summary-grid">
+    <div class="summary-card" style="--card-color: var(--green)">
+      <div class="summary-label">KPIs no verde</div>
+      <div class="summary-value" id="sum-ok">—</div>
+      <div class="summary-sub">dentro da meta</div>
+    </div>
+    <div class="summary-card" style="--card-color: var(--yellow)">
+      <div class="summary-label">Em alerta</div>
+      <div class="summary-value" id="sum-alerta">—</div>
+      <div class="summary-sub">atenção necessária</div>
+    </div>
+    <div class="summary-card" style="--card-color: var(--red)">
+      <div class="summary-label">Críticos</div>
+      <div class="summary-value" id="sum-critico">—</div>
+      <div class="summary-sub">fora da meta</div>
+    </div>
+    <div class="summary-card" style="--card-color: var(--text3)">
+      <div class="summary-label">Sem dado</div>
+      <div class="summary-value" id="sum-nd">—</div>
+      <div class="summary-sub">aguardando coleta</div>
+    </div>
+    <div class="summary-card" style="--card-color: var(--blue)">
+      <div class="summary-label">Total de KPIs</div>
+      <div class="summary-value" id="sum-total">—</div>
+      <div class="summary-sub">5 áreas monitoradas</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('all')" data-tab="all"><span class="tab-dot"></span>Visão Geral</button>
+    <button class="tab" onclick="switchTab('contratos')" data-tab="contratos"><span class="tab-dot"></span>Contratos & Licitações</button>
+    <button class="tab" onclick="switchTab('pessoas')" data-tab="pessoas"><span class="tab-dot"></span>Gestão de Pessoas</button>
+    <button class="tab" onclick="switchTab('financeiro')" data-tab="financeiro"><span class="tab-dot"></span>Financeiro</button>
+    <button class="tab" onclick="switchTab('ti')" data-tab="ti"><span class="tab-dot"></span>TI & Infraestrutura</button>
+    <button class="tab" onclick="switchTab('protocolo')" data-tab="protocolo"><span class="tab-dot"></span>Protocolo & Processos</button>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Meta atingida</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Em alerta</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Crítico</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--text3)"></div> Sem dado</div>
+    <div style="font-size:11px; color:var(--text3); font-family:'DM Mono',monospace; margin-left:auto;">Clique nos valores para editar</div>
+  </div>
+
+  <!-- SECTIONS -->
+  <div id="all-section" class="section active"></div>
+  <div id="contratos-section" class="section"></div>
+  <div id="pessoas-section" class="section"></div>
+  <div id="financeiro-section" class="section"></div>
+  <div id="ti-section" class="section"></div>
+  <div id="protocolo-section" class="section"></div>
+
+  <!-- Nota metodológica -->
+  <div class="nota">
+    <strong>📋 Nota Metodológica</strong>
+    Este painel consolida os principais indicadores de desempenho da Subsecretaria de Assuntos Administrativos do Ministério da Saúde. Os valores marcados como <strong>N/D</strong> devem ser preenchidos semanalmente pelos responsáveis de cada área. As metas foram definidas com base em boas práticas de gestão pública (TCU, CGU e MPOG). Clique sobre qualquer valor para editá-lo diretamente.
+  </div>
+
+  <footer>
+    <div class="footer-text">SAA · MINISTÉRIO DA SAÚDE · GABINETE DE ASSUNTOS ADMINISTRATIVOS</div>
+    <div class="footer-text">Ciclo semanal · <span>Versão 1.0</span></div>
+  </footer>
+
+</div>
+
+<script>
+// ─── DADOS DOS KPIs ─────────────────────────────────────────────────────────
+const kpis = {
+  contratos: {
+    label: "Contratos & Licitações",
+    icon: "📄",
+    color: "var(--accent)",
+    items: [
+      {
+        name: "Processos licitatórios concluídos no prazo",
+        value: "N/D", unit: "%", meta: "≥ 85%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "SIASG / DL",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [60, 70, 65, 80, 0],
+        desc: "% de pregões/dispensas encerrados dentro do prazo previsto"
+      },
+      {
+        name: "Contratos com vigência a vencer (≤ 60 dias)",
+        value: "N/D", unit: "qtd", meta: "< 5",
+        status: "nd", barColor: "bar-yellow", barPct: 0,
+        source: "SIASG / CGCON",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [3, 7, 5, 4, 0],
+        desc: "Contratos que expiram em até 60 dias sem renovação iniciada"
+      },
+      {
+        name: "Atas de registro de preço ativas",
+        value: "N/D", unit: "atas", meta: "—",
+        status: "nd", barColor: "bar-blue", barPct: 0,
+        source: "SIASG",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [8, 9, 10, 11, 0],
+        desc: "Quantitativo de atas vigentes disponíveis para utilização"
+      },
+      {
+        name: "Glosas e impugnações em processos",
+        value: "N/D", unit: "qtd", meta: "0",
+        status: "nd", barColor: "bar-red", barPct: 0,
+        source: "CGCON",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [1, 0, 2, 0, 0],
+        desc: "Número de impugnações e glosas registradas no período"
+      },
+      {
+        name: "Economia gerada em licitações (vs. valor referência)",
+        value: "N/D", unit: "%", meta: "≥ 10%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "DL / PNCP",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [12, 8, 15, 11, 0],
+        desc: "Percentual de desconto médio obtido nos pregões"
+      }
+    ]
+  },
+  pessoas: {
+    label: "Gestão de Pessoas",
+    icon: "👥",
+    color: "var(--accent2)",
+    items: [
+      {
+        name: "Taxa de frequência (assiduidade)",
+        value: "N/D", unit: "%", meta: "≥ 95%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "SIAPE / Ponto",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [96, 95, 97, 94, 0],
+        desc: "% de servidores com frequência regular no período"
+      },
+      {
+        name: "Afastamentos por saúde (licenças médicas)",
+        value: "N/D", unit: "serv.", meta: "—",
+        status: "nd", barColor: "bar-yellow", barPct: 0,
+        source: "SIAPE",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [3, 5, 2, 4, 0],
+        desc: "Quantidade de servidores em licença médica na semana"
+      },
+      {
+        name: "Servidores com capacitação no ano (PDC)",
+        value: "N/D", unit: "%", meta: "≥ 60%",
+        status: "nd", barColor: "bar-blue", barPct: 0,
+        source: "SADE / RH",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [30, 40, 50, 55, 0],
+        desc: "% de servidores com ao menos 1 capacitação no PDC anual"
+      },
+      {
+        name: "Cargos vagos não providos",
+        value: "N/D", unit: "qtd", meta: "< 10%",
+        status: "nd", barColor: "bar-yellow", barPct: 0,
+        source: "SIAPE",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [5, 6, 4, 5, 0],
+        desc: "Quantidade de cargos da força de trabalho sem ocupante"
+      },
+      {
+        name: "Avaliações de desempenho em dia",
+        value: "N/D", unit: "%", meta: "100%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "SIAPE / CGRH",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [70, 80, 85, 90, 0],
+        desc: "% de servidores com avaliação de desempenho em conformidade"
+      }
+    ]
+  },
+  financeiro: {
+    label: "Financeiro & Orçamentário",
+    icon: "💰",
+    color: "var(--accent3)",
+    items: [
+      {
+        name: "Execução orçamentária (% do limite liberado)",
+        value: "N/D", unit: "%", meta: "≥ 80%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "SIAFI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [20, 40, 55, 70, 0],
+        desc: "Percentual do teto orçamentário efetivamente executado no ano"
+      },
+      {
+        name: "Empenhos liquidados sem pendência",
+        value: "N/D", unit: "%", meta: "≥ 95%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "SIAFI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [88, 90, 92, 95, 0],
+        desc: "% de empenhos com liquidação concluída sem pendências"
+      },
+      {
+        name: "Restos a pagar (RAP) inscritos / total empenhado",
+        value: "N/D", unit: "%", meta: "< 15%",
+        status: "nd", barColor: "bar-yellow", barPct: 0,
+        source: "SIAFI / SOF",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [20, 18, 17, 16, 0],
+        desc: "Relação entre RAP inscritos e o total empenhado no exercício"
+      },
+      {
+        name: "Despesas sem cobertura orçamentária",
+        value: "N/D", unit: "qtd", meta: "0",
+        status: "nd", barColor: "bar-red", barPct: 0,
+        source: "SIAFI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [0, 1, 0, 0, 0],
+        desc: "Número de pagamentos realizados sem dotação adequada"
+      },
+      {
+        name: "Prazo médio de pagamento a fornecedores",
+        value: "N/D", unit: "dias", meta: "≤ 30d",
+        status: "nd", barColor: "bar-blue", barPct: 0,
+        source: "SIAFI / CGFIN",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [25, 28, 22, 27, 0],
+        desc: "Tempo médio entre a liquidação e o efetivo pagamento"
+      }
+    ]
+  },
+  ti: {
+    label: "TI & Infraestrutura",
+    icon: "🖥️",
+    color: "var(--accent5)",
+    items: [
+      {
+        name: "Disponibilidade dos sistemas críticos (uptime)",
+        value: "N/D", unit: "%", meta: "≥ 99%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "DATASUS / CGTI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [99, 98, 99, 100, 0],
+        desc: "% do tempo em que os sistemas essenciais estão operacionais"
+      },
+      {
+        name: "Chamados de suporte resolvidos no prazo (SLA)",
+        value: "N/D", unit: "%", meta: "≥ 90%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "Service Desk / CGTI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [85, 88, 87, 90, 0],
+        desc: "% de tickets fechados dentro do tempo de atendimento acordado"
+      },
+      {
+        name: "Incidentes de segurança da informação",
+        value: "N/D", unit: "ocorr.", meta: "0",
+        status: "nd", barColor: "bar-red", barPct: 0,
+        source: "CGSI / CTIR",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [0, 1, 0, 0, 0],
+        desc: "Número de incidentes de segurança registrados no período"
+      },
+      {
+        name: "Equipamentos com manutenção preventiva em dia",
+        value: "N/D", unit: "%", meta: "≥ 80%",
+        status: "nd", barColor: "bar-blue", barPct: 0,
+        source: "CGTI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [60, 65, 70, 75, 0],
+        desc: "% do parque tecnológico com manutenção preventiva atualizada"
+      }
+    ]
+  },
+  protocolo: {
+    label: "Protocolo & Processos Adm.",
+    icon: "📬",
+    color: "var(--green)",
+    items: [
+      {
+        name: "Processos SEI tramitados no prazo regimental",
+        value: "N/D", unit: "%", meta: "≥ 90%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "SEI / CGDOC",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [80, 82, 85, 88, 0],
+        desc: "% de processos tramitados dentro do prazo de resposta definido"
+      },
+      {
+        name: "Tempo médio de resposta a demandas internas",
+        value: "N/D", unit: "dias", meta: "≤ 5d",
+        status: "nd", barColor: "bar-yellow", barPct: 0,
+        source: "SEI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [8, 7, 6, 5, 0],
+        desc: "Tempo médio entre recebimento e resposta de demandas internas"
+      },
+      {
+        name: "Processos com prazo vencido (pendentes)",
+        value: "N/D", unit: "qtd", meta: "0",
+        status: "nd", barColor: "bar-red", barPct: 0,
+        source: "SEI / Painel TCU",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [10, 8, 6, 4, 0],
+        desc: "Processos com prazo excedido aguardando tramitação ou resposta"
+      },
+      {
+        name: "Digitalização de documentos físicos",
+        value: "N/D", unit: "%", meta: "100%",
+        status: "nd", barColor: "bar-blue", barPct: 0,
+        source: "CGDOC",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [60, 70, 80, 90, 0],
+        desc: "% do acervo físico já digitalizado e indexado no SEI"
+      },
+      {
+        name: "Demandas de controle externo (TCU/CGU) respondidas",
+        value: "N/D", unit: "%", meta: "100%",
+        status: "nd", barColor: "bar-green", barPct: 0,
+        source: "e-TCU / SEI",
+        trend: "—", trendClass: "trend-neutral",
+        sparks: [90, 95, 100, 100, 0],
+        desc: "% das manifestações de órgãos de controle respondidas no prazo"
+      }
+    ]
+  }
+};
+
+// ─── RENDERIZAÇÃO ────────────────────────────────────────────────────────────
+const areaOrder = ['contratos','pessoas','financeiro','ti','protocolo'];
+
+function statusBadge(s) {
+  if (s === 'ok')      return '<span class="status-badge status-ok">✓ Meta</span>';
+  if (s === 'alerta')  return '<span class="status-badge status-alerta">⚠ Alerta</span>';
+  if (s === 'critico') return '<span class="status-badge status-critico">✕ Crítico</span>';
+  return '<span class="status-badge status-nd">N/D</span>';
+}
+
+function sparklineHTML(sparks, barColor) {
+  const max = Math.max(...sparks, 1);
+  return sparks.map((v, i) => {
+    const h = v > 0 ? Math.max(4, Math.round((v / max) * 28)) : 3;
+    const last = i === sparks.length - 1;
+    const cls = last ? 'bar-' + barColor.replace('bar-','') : '';
+    const bg = last ? `background:var(--${barColor.replace('bar-','')})` : 'background:rgba(255,255,255,0.08)';
+    return `<div class="spark-bar ${cls}" style="height:${h}px; ${bg}"></div>`;
+  }).join('');
+}
+
+function renderCard(kpi, areaKey) {
+  const barW = kpi.barPct > 0 ? kpi.barPct : 0;
+  return `
+    <div class="kpi-card" data-area="${areaKey}" data-name="${kpi.name}">
+      <div class="kpi-top">
+        <div class="kpi-name">${kpi.name}</div>
+        ${statusBadge(kpi.status)}
+      </div>
+      <div class="kpi-value-row">
+        <div class="kpi-value" contenteditable="true" spellcheck="false"
+             onblur="onValueEdit(this, '${areaKey}', '${kpi.name}')">${kpi.value}</div>
+        <div class="kpi-unit">${kpi.unit}</div>
+      </div>
+      <div class="kpi-target">Meta: <strong>${kpi.meta}</strong> &nbsp;·&nbsp; <span style="opacity:0.6">${kpi.desc}</span></div>
+      <div class="sparkline">${sparklineHTML(kpi.sparks, kpi.barColor)}</div>
+      <div class="progress-wrap"><div class="progress-bar ${kpi.barColor}" style="width:${barW}%"></div></div>
+      <div class="kpi-meta">
+        <div class="kpi-source">Fonte: ${kpi.source}</div>
+        <div class="kpi-trend ${kpi.trendClass}">${kpi.trend}</div>
+      </div>
+    </div>`;
+}
+
+function renderSection(areaKey) {
+  const area = kpis[areaKey];
+  return `
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(255,255,255,0.04); border:1px solid var(--border)">${area.icon}</div>
+      <div>
+        <div class="section-title">${area.label}</div>
+        <div class="section-desc">${area.items.length} indicadores · ciclo semanal</div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      ${area.items.map(k => renderCard(k, areaKey)).join('')}
+    </div>`;
+}
+
+function renderAll() {
+  const allEl = document.getElementById('all-section');
+  allEl.innerHTML = areaOrder.map(key => `
+    <div class="kpi-area-block">
+      <div class="area-divider">
+        <div class="area-divider-label">${kpis[key].icon} ${kpis[key].label}</div>
+        <div class="area-divider-line"></div>
+      </div>
+      <div class="kpi-grid">
+        ${kpis[key].items.map(k => renderCard(k, key)).join('')}
+      </div>
+    </div>`).join('');
+
+  areaOrder.forEach(key => {
+    document.getElementById(`${key}-section`).innerHTML = renderSection(key);
+  });
+}
+
+// ─── SUMÁRIOS ────────────────────────────────────────────────────────────────
+function updateSummary() {
+  let ok=0, alerta=0, critico=0, nd=0;
+  areaOrder.forEach(a => {
+    kpis[a].items.forEach(k => {
+      if (k.status==='ok') ok++;
+      else if (k.status==='alerta') alerta++;
+      else if (k.status==='critico') critico++;
+      else nd++;
+    });
+  });
+  document.getElementById('sum-ok').textContent = ok;
+  document.getElementById('sum-alerta').textContent = alerta;
+  document.getElementById('sum-critico').textContent = critico;
+  document.getElementById('sum-nd').textContent = nd;
+  document.getElementById('sum-total').textContent = ok+alerta+critico+nd;
+}
+
+// ─── TAB SWITCH ──────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`${tab}-section`).classList.add('active');
+}
+
+// ─── EDIÇÃO INLINE ───────────────────────────────────────────────────────────
+function onValueEdit(el, areaKey, kpiName) {
+  const val = el.textContent.trim();
+  const area = kpis[areaKey];
+  const kpi = area.items.find(k => k.name === kpiName);
+  if (!kpi) return;
+
+  kpi.value = val || 'N/D';
+
+  // Auto-status por heurística simples (percentual)
+  const num = parseFloat(val.replace(',','.'));
+  if (!isNaN(num) && kpi.unit === '%') {
+    const metaNum = parseFloat(kpi.meta.replace(/[^0-9.]/g,''));
+    if (!isNaN(metaNum)) {
+      if (kpi.meta.includes('≥')) {
+        kpi.status = num >= metaNum ? 'ok' : num >= metaNum * 0.9 ? 'alerta' : 'critico';
+        kpi.barPct = Math.min(100, Math.round((num/metaNum)*100));
+      } else if (kpi.meta.includes('<') || kpi.meta.includes('≤')) {
+        kpi.status = num <= metaNum ? 'ok' : num <= metaNum * 1.15 ? 'alerta' : 'critico';
+        kpi.barPct = Math.min(100, Math.round((metaNum/num)*100));
+      }
+    }
+    kpi.sparks[kpi.sparks.length-1] = num;
+  }
+
+  // Re-renderizar e re-syncronizar
+  renderAll();
+  updateSummary();
+  switchTab(document.querySelector('.tab.active').dataset.tab);
+}
+
+// ─── DATA / SEMANA ───────────────────────────────────────────────────────────
+function getWeekInfo() {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - now.getDay() + 1);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 4);
+  const fmt = d => d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  const weekNum = Math.ceil((((now - new Date(now.getFullYear(),0,1)) / 86400000) + 1) / 7);
+  return { range: `${fmt(start)} – ${fmt(end)}`, num: weekNum };
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  const wk = getWeekInfo();
+  document.getElementById('week-num').textContent = wk.num;
+  document.getElementById('week-range').textContent = wk.range;
+  document.getElementById('last-update').textContent =
+    'Atualizado: ' + new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  renderAll();
+  updateSummary();
+})();
+</script>
+</body>
+</html>
